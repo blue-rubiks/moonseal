@@ -4,6 +4,13 @@ export const MAX_RECENTS = 20;
 
 export type RecentType = RecentRecord['type'];
 
+let lastPlayedAt = 0;
+function nextPlayedAt(): number {
+  const now = Date.now();
+  lastPlayedAt = now > lastPlayedAt ? now : lastPlayedAt + 1;
+  return lastPlayedAt;
+}
+
 export class RecentsRepo {
   async push(type: RecentType, refId: string): Promise<void> {
     const db = await getDB();
@@ -17,7 +24,7 @@ export class RecentsRepo {
       id: crypto.randomUUID(),
       type,
       refId,
-      playedAt: Date.now()
+      playedAt: nextPlayedAt()
     };
     await db.put('recents', record);
     const fresh = await db.getAll('recents');
