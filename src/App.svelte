@@ -5,6 +5,7 @@
   import StoryPlayer from './routes/StoryPlayer.svelte';
   import StoryEditor from './routes/StoryEditor.svelte';
   import Library from './routes/Library.svelte';
+  import PlayerBar from './components/PlayerBar.svelte';
   import type { StoryDef } from './lib/story/types';
   import type { CustomStoryRecord } from './lib/storage/StoryRepo';
 
@@ -43,6 +44,8 @@
     <Library />
   {/if}
 </main>
+
+<PlayerBar />
 
 {#if !activeStory && !editing}
   <nav>
