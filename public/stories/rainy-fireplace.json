@@ -1,0 +1,12 @@
+{
+  "id": "rainy-fireplace",
+  "nameKey": "雨夜壁爐",
+  "description": "雨打窗戶，柴火微亮的夜晚",
+  "builtin": true,
+  "totalDurationSec": 1800,
+  "segments": [
+    { "soundId": "rain",      "durationSec": 600, "crossfadeSec": 45, "volume": 0.7,  "poeticText": "雨輕輕敲打窗戶。" },
+    { "soundId": "fireplace", "durationSec": 600, "crossfadeSec": 45, "volume": 0.55, "poeticText": "壁爐的柴火劈啪作響。" },
+    { "soundId": "rain",      "durationSec": 600, "crossfadeSec": 0,  "volume": 0.45, "poeticText": "夜深了，雨聲伴你入睡。" }
+  ]
+}

@@ -1,0 +1,12 @@
+{
+  "id": "mountain-stream",
+  "nameKey": "山中溪流",
+  "description": "高山溪流伴隨遠方鳥鳴",
+  "builtin": true,
+  "totalDurationSec": 1500,
+  "segments": [
+    { "soundId": "stream", "durationSec": 600, "crossfadeSec": 30, "volume": 0.7,  "poeticText": "溪水從山谷中流下。" },
+    { "soundId": "birds",  "durationSec": 450, "crossfadeSec": 30, "volume": 0.5,  "poeticText": "山中迴盪著鳥鳴。" },
+    { "soundId": "wind",   "durationSec": 450, "crossfadeSec": 0,  "volume": 0.45, "poeticText": "晚風拂過稜線。" }
+  ]
+}

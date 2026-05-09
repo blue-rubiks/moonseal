@@ -1,0 +1,12 @@
+{
+  "id": "forest-spa",
+  "nameKey": "森林湯泉",
+  "description": "森林的早晨，靜靜的水聲",
+  "builtin": true,
+  "totalDurationSec": 1620,
+  "segments": [
+    { "soundId": "birds",  "durationSec": 540, "crossfadeSec": 30, "volume": 0.55, "poeticText": "樹梢的鳥聲喚醒森林。" },
+    { "soundId": "stream", "durationSec": 540, "crossfadeSec": 30, "volume": 0.65, "poeticText": "潺潺溪水，清澈如鏡。" },
+    { "soundId": "wind",   "durationSec": 540, "crossfadeSec": 0,  "volume": 0.5,  "poeticText": "風穿過樹葉，把心吹得很慢。" }
+  ]
+}

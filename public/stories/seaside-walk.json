@@ -1,0 +1,13 @@
+{
+  "id": "seaside-walk",
+  "nameKey": "海邊漫步",
+  "description": "從浪潮聲走進清晨的海邊",
+  "builtin": true,
+  "totalDurationSec": 1500,
+  "segments": [
+    { "soundId": "ocean",  "durationSec": 360, "crossfadeSec": 30, "volume": 0.75, "poeticText": "腳步緩慢，海浪一波又一波湧來。" },
+    { "soundId": "birds",  "durationSec": 360, "crossfadeSec": 30, "volume": 0.55, "poeticText": "天色漸亮，遠方傳來海鳥呼喚。" },
+    { "soundId": "rain",   "durationSec": 360, "crossfadeSec": 30, "volume": 0.6,  "poeticText": "雲層飄來，溫柔的雨打在沙上。" },
+    { "soundId": "stream", "durationSec": 420, "crossfadeSec": 0,  "volume": 0.55, "poeticText": "雨後的小溪，是回家的路。" }
+  ]
+}

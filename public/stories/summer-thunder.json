@@ -1,0 +1,12 @@
+{
+  "id": "summer-thunder",
+  "nameKey": "夏夜雷雨",
+  "description": "夏天的雷與雨，由近至遠",
+  "builtin": true,
+  "totalDurationSec": 1500,
+  "segments": [
+    { "soundId": "thunder", "durationSec": 360, "crossfadeSec": 30, "volume": 0.6,  "poeticText": "遠方雷聲，預告了夏夜。" },
+    { "soundId": "rain",    "durationSec": 540, "crossfadeSec": 30, "volume": 0.7,  "poeticText": "豆大的雨珠落下。" },
+    { "soundId": "rain",    "durationSec": 600, "crossfadeSec": 0,  "volume": 0.45, "poeticText": "雨勢漸小，世界安靜下來。" }
+  ]
+}
