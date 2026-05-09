@@ -85,6 +85,20 @@ export function getDB(): Promise<IDBPDatabase<AppSchema>> {
   return dbPromise;
 }
 
-export function _resetForTests(): void {
-  dbPromise = null;
+export async function _resetForTests(): Promise<void> {
+  if (dbPromise) {
+    try {
+      const db = await dbPromise;
+      db.close();
+    } catch {
+      /* ignore */
+    }
+    dbPromise = null;
+  }
+  await new Promise<void>((resolve) => {
+    const req = indexedDB.deleteDatabase(DB_NAME);
+    req.onsuccess = () => resolve();
+    req.onerror = () => resolve();
+    req.onblocked = () => resolve();
+  });
 }
