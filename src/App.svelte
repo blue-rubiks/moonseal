@@ -1,9 +1,13 @@
 <script lang="ts">
   import Home from './routes/Home.svelte';
   import Mixer from './routes/Mixer.svelte';
+  import Stories from './routes/Stories.svelte';
+  import StoryPlayer from './routes/StoryPlayer.svelte';
   import Library from './routes/Library.svelte';
+  import type { StoryDef } from './lib/story/types';
 
   let route = $state<'home' | 'mixer' | 'stories' | 'library'>('home');
+  let activeStory = $state<StoryDef | null>(null);
 </script>
 
 <header>
@@ -11,23 +15,27 @@
 </header>
 
 <main>
-  {#if route === 'home'}
+  {#if activeStory}
+    <StoryPlayer story={activeStory} onClose={() => activeStory = null} />
+  {:else if route === 'home'}
     <Home />
   {:else if route === 'mixer'}
     <Mixer />
   {:else if route === 'stories'}
-    <p>故事 (尚未實作)</p>
+    <Stories onSelect={(s) => activeStory = s} />
   {:else if route === 'library'}
     <Library />
   {/if}
 </main>
 
-<nav>
-  <button class:active={route === 'home'} onclick={() => route = 'home'}>首頁</button>
-  <button class:active={route === 'mixer'} onclick={() => route = 'mixer'}>混音</button>
-  <button class:active={route === 'stories'} onclick={() => route = 'stories'}>故事</button>
-  <button class:active={route === 'library'} onclick={() => route = 'library'}>我的</button>
-</nav>
+{#if !activeStory}
+  <nav>
+    <button class:active={route === 'home'} onclick={() => route = 'home'}>首頁</button>
+    <button class:active={route === 'mixer'} onclick={() => route = 'mixer'}>混音</button>
+    <button class:active={route === 'stories'} onclick={() => route = 'stories'}>故事</button>
+    <button class:active={route === 'library'} onclick={() => route = 'library'}>我的</button>
+  </nav>
+{/if}
 
 <style>
   header { padding: 1.25rem 1.5rem 0; }
