@@ -3,11 +3,15 @@
   import Mixer from './routes/Mixer.svelte';
   import Stories from './routes/Stories.svelte';
   import StoryPlayer from './routes/StoryPlayer.svelte';
+  import StoryEditor from './routes/StoryEditor.svelte';
   import Library from './routes/Library.svelte';
   import type { StoryDef } from './lib/story/types';
+  import type { CustomStoryRecord } from './lib/storage/StoryRepo';
 
   let route = $state<'home' | 'mixer' | 'stories' | 'library'>('home');
   let activeStory = $state<StoryDef | null>(null);
+  let editing = $state<{ initial: CustomStoryRecord | null } | null>(null);
+  let storiesKey = $state(0);
 </script>
 
 <header>
@@ -15,20 +19,32 @@
 </header>
 
 <main>
-  {#if activeStory}
+  {#if editing !== null}
+    <StoryEditor
+      initial={editing.initial}
+      onClose={() => editing = null}
+      onSaved={() => { editing = null; storiesKey++; }}
+    />
+  {:else if activeStory}
     <StoryPlayer story={activeStory} onClose={() => activeStory = null} />
   {:else if route === 'home'}
     <Home />
   {:else if route === 'mixer'}
     <Mixer />
   {:else if route === 'stories'}
-    <Stories onSelect={(s) => activeStory = s} />
+    {#key storiesKey}
+      <Stories
+        onSelect={(s) => activeStory = s}
+        onCreate={() => editing = { initial: null }}
+        onEdit={(s) => editing = { initial: s }}
+      />
+    {/key}
   {:else if route === 'library'}
     <Library />
   {/if}
 </main>
 
-{#if !activeStory}
+{#if !activeStory && !editing}
   <nav>
     <button class:active={route === 'home'} onclick={() => route = 'home'}>首頁</button>
     <button class:active={route === 'mixer'} onclick={() => route = 'mixer'}>混音</button>
