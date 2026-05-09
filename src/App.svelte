@@ -1,6 +1,7 @@
 <script lang="ts">
   import Home from './routes/Home.svelte';
   import Mixer from './routes/Mixer.svelte';
+  import Library from './routes/Library.svelte';
 
   let route = $state<'home' | 'mixer' | 'stories' | 'library'>('home');
 </script>
@@ -17,7 +18,7 @@
   {:else if route === 'stories'}
     <p>故事 (尚未實作)</p>
   {:else if route === 'library'}
-    <p>我的 (尚未實作)</p>
+    <Library />
   {/if}
 </main>
 
