@@ -6,6 +6,7 @@
   import StoryEditor from './routes/StoryEditor.svelte';
   import Library from './routes/Library.svelte';
   import PlayerBar from './components/PlayerBar.svelte';
+  import Toast from './components/Toast.svelte';
   import type { StoryDef } from './lib/story/types';
   import type { CustomStoryRecord } from './lib/storage/StoryRepo';
 
@@ -14,6 +15,8 @@
   let editing = $state<{ initial: CustomStoryRecord | null } | null>(null);
   let storiesKey = $state(0);
 </script>
+
+<Toast />
 
 <header>
   <h1>白噪音與睡眠</h1>

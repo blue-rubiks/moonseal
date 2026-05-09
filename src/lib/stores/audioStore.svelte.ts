@@ -1,5 +1,6 @@
 import { audioEngine } from '../audio/AudioEngine';
 import { recentsRepo } from '../storage/RecentsRepo';
+import { toastStore } from './toastStore.svelte';
 
 export interface TrackState {
   soundId: string;
@@ -20,15 +21,20 @@ class AudioStore {
   }
 
   async toggleSound(soundId: string, volume = 0.7) {
-    await this.ensureInitialized();
-    if (this.tracks[soundId]) {
-      await audioEngine.stopTrack(soundId);
-      delete this.tracks[soundId];
-      return;
+    try {
+      await this.ensureInitialized();
+      if (this.tracks[soundId]) {
+        await audioEngine.stopTrack(soundId);
+        delete this.tracks[soundId];
+        return;
+      }
+      await audioEngine.playTrack(soundId, volume);
+      this.tracks[soundId] = { soundId, volume };
+      void recentsRepo.push('sound', soundId).catch(() => { /* ignore */ });
+    } catch (e) {
+      const msg = e instanceof Error ? e.message : '播放失敗';
+      toastStore.show(`音效載入失敗：${msg}`, 'error');
     }
-    await audioEngine.playTrack(soundId, volume);
-    this.tracks[soundId] = { soundId, volume };
-    void recentsRepo.push('sound', soundId).catch(() => { /* ignore */ });
   }
 
   setVolume(soundId: string, volume: number) {
