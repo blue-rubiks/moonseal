@@ -7,10 +7,11 @@ interface ActiveTrack {
   source: Tone.Player | Tone.Noise;
 }
 
-type GainOutput = { output: { gain: { rampTo: (v: number, t: number) => void; value: number } } };
+const MIN_DB = -100;
 
-function gainOf(source: Tone.Player | Tone.Noise) {
-  return (source as unknown as GainOutput).output.gain;
+function rampVolume(source: Tone.Player | Tone.Noise, linearGain: number, sec: number) {
+  const db = linearGain <= 0 ? MIN_DB : Tone.gainToDb(linearGain);
+  source.volume.rampTo(db, sec);
 }
 
 export class AudioEngine {
@@ -32,21 +33,22 @@ export class AudioEngine {
     }
     const track = await this.createTrack(def);
     this.tracks.set(soundId, track);
+    track.source.volume.value = MIN_DB;
     track.source.start();
-    gainOf(track.source).rampTo(volume, fadeInSec);
+    rampVolume(track.source, volume, fadeInSec);
   }
 
   setVolume(soundId: string, volume: number, rampSec = 0.1): void {
     const t = this.tracks.get(soundId);
     if (!t) return;
-    gainOf(t.source).rampTo(volume, rampSec);
+    rampVolume(t.source, volume, rampSec);
   }
 
   async stopTrack(soundId: string, fadeOutSec = 0.5): Promise<void> {
     const t = this.tracks.get(soundId);
     if (!t) return;
     if (fadeOutSec > 0) {
-      gainOf(t.source).rampTo(0, fadeOutSec);
+      rampVolume(t.source, 0, fadeOutSec);
       await new Promise((r) => setTimeout(r, fadeOutSec * 1000));
     }
     t.source.stop();
@@ -70,13 +72,14 @@ export class AudioEngine {
     } else {
       const track = await this.createTrack(def);
       this.tracks.set(soundId, track);
+      track.source.volume.value = MIN_DB;
       track.source.start();
-      gainOf(track.source).rampTo(volume, crossfadeSec);
+      rampVolume(track.source, volume, crossfadeSec);
     }
 
     for (const id of previousIds) {
       const prev = this.tracks.get(id)!;
-      gainOf(prev.source).rampTo(0, crossfadeSec);
+      rampVolume(prev.source, 0, crossfadeSec);
       setTimeout(() => {
         try {
           prev.source.stop();
@@ -91,7 +94,7 @@ export class AudioEngine {
 
   async masterFadeOut(fadeOutSec: number): Promise<void> {
     for (const t of this.tracks.values()) {
-      gainOf(t.source).rampTo(0, fadeOutSec);
+      rampVolume(t.source, 0, fadeOutSec);
     }
     await new Promise((r) => setTimeout(r, fadeOutSec * 1000));
     await this.stopAll(0);
