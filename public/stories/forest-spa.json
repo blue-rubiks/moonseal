@@ -1,12 +1,21 @@
 {
   "id": "forest-spa",
   "nameKey": "森林湯泉",
-  "description": "森林的早晨，靜靜的水聲",
+  "description": "從黎明的鳥啼走進溪水與風的森林",
   "builtin": true,
   "totalDurationSec": 1620,
   "segments": [
-    { "soundId": "birds",  "durationSec": 540, "crossfadeSec": 30, "volume": 0.55, "poeticText": "樹梢的鳥聲喚醒森林。" },
-    { "soundId": "stream", "durationSec": 540, "crossfadeSec": 30, "volume": 0.65, "poeticText": "潺潺溪水，清澈如鏡。" },
-    { "soundId": "wind",   "durationSec": 540, "crossfadeSec": 0,  "volume": 0.5,  "poeticText": "風穿過樹葉，把心吹得很慢。" }
+    { "soundId": "birds",  "durationSec": 130, "crossfadeSec": 0,  "volume": 0.55, "poeticText": "天還沒亮，山裡先有了第一聲鳥啼。" },
+    { "soundId": "birds",  "durationSec": 140, "crossfadeSec": 20, "volume": 0.55, "poeticText": "葉間的露水，被翅膀輕輕震落。" },
+    { "soundId": "stream", "durationSec": 130, "crossfadeSec": 20, "volume": 0.65, "poeticText": "走進林子深處，水聲從遠方湧來。" },
+    { "soundId": "stream", "durationSec": 140, "crossfadeSec": 20, "volume": 0.65, "poeticText": "石頭被水磨了千年，靜靜臥著。" },
+    { "soundId": "stream", "durationSec": 130, "crossfadeSec": 20, "volume": 0.6,  "poeticText": "彎腰看見自己的倒影，眼神像清晨。" },
+    { "soundId": "wind",   "durationSec": 140, "crossfadeSec": 20, "volume": 0.5,  "poeticText": "風穿過樹葉，把心吹得很慢。" },
+    { "soundId": "wind",   "durationSec": 130, "crossfadeSec": 20, "volume": 0.5,  "poeticText": "光線斜斜地落，打在腳邊的苔蘚上。" },
+    { "soundId": "birds",  "durationSec": 140, "crossfadeSec": 20, "volume": 0.5,  "poeticText": "鳥又叫了一聲，提醒我森林是醒著的。" },
+    { "soundId": "stream", "durationSec": 130, "crossfadeSec": 20, "volume": 0.6,  "poeticText": "水流沒有去處，只是一直在流。" },
+    { "soundId": "wind",   "durationSec": 140, "crossfadeSec": 20, "volume": 0.45, "poeticText": "閉上眼，聽見樹梢的呼吸。" },
+    { "soundId": "stream", "durationSec": 130, "crossfadeSec": 20, "volume": 0.55, "poeticText": "時間像水，穿過指縫卻不留痕跡。" },
+    { "soundId": "wind",   "durationSec": 140, "crossfadeSec": 0,  "volume": 0.45, "poeticText": "什麼都不必想，森林會替你守夜。" }
   ]
 }

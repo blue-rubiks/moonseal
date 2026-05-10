@@ -61,14 +61,14 @@
   }
 </script>
 
-<div class="overlay" role="dialog" aria-modal="true" aria-label={initial ? '編輯故事' : '新增自訂故事'}>
+<div class="overlay" role="dialog" aria-modal="true" aria-label={initial ? '編輯夜讀' : '新增自訂夜讀'}>
   <div class="sheet paper-grain" class:mobile={uiStore.mobile}>
     <button class="close" onclick={onClose} aria-label="關閉">×</button>
     <span class="stamp top-stamp">新作</span>
 
     <div class="content">
-      <div class="kicker">{initial ? '編輯自訂故事' : '新增自訂故事'}</div>
-      <input class="name" type="text" bind:value={name} placeholder="未命名故事"/>
+      <div class="kicker">{initial ? '編輯自訂夜讀' : '新增自訂夜讀'}</div>
+      <input class="name" type="text" bind:value={name} placeholder="未命名夜讀"/>
 
       <div class="block">
         <div class="section-label">段落 · {segments.length} 段</div>

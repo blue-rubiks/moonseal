@@ -1,13 +1,21 @@
 {
   "id": "seaside-walk",
   "nameKey": "海邊漫步",
-  "description": "從浪潮聲走進清晨的海邊",
+  "description": "從浪潮聲走進海鳥、雨與回家的小溪",
   "builtin": true,
   "totalDurationSec": 1500,
   "segments": [
-    { "soundId": "ocean",  "durationSec": 360, "crossfadeSec": 30, "volume": 0.75, "poeticText": "腳步緩慢，海浪一波又一波湧來。" },
-    { "soundId": "birds",  "durationSec": 360, "crossfadeSec": 30, "volume": 0.55, "poeticText": "天色漸亮，遠方傳來海鳥呼喚。" },
-    { "soundId": "rain",   "durationSec": 360, "crossfadeSec": 30, "volume": 0.6,  "poeticText": "雲層飄來，溫柔的雨打在沙上。" },
-    { "soundId": "stream", "durationSec": 420, "crossfadeSec": 0,  "volume": 0.55, "poeticText": "雨後的小溪，是回家的路。" }
+    { "soundId": "ocean",  "durationSec": 120, "crossfadeSec": 0,  "volume": 0.75, "poeticText": "腳步緩慢，海浪一波又一波湧來。" },
+    { "soundId": "ocean",  "durationSec": 130, "crossfadeSec": 20, "volume": 0.7,  "poeticText": "鞋裡的沙在腳趾間滑動，沒人趕你走。" },
+    { "soundId": "ocean",  "durationSec": 120, "crossfadeSec": 20, "volume": 0.65, "poeticText": "潮水把白日的雜音帶走了。" },
+    { "soundId": "birds",  "durationSec": 130, "crossfadeSec": 20, "volume": 0.55, "poeticText": "天色漸亮，遠方傳來海鳥呼喚。" },
+    { "soundId": "birds",  "durationSec": 120, "crossfadeSec": 20, "volume": 0.5,  "poeticText": "牠們不知道你在聽，就像你不知道自己在等什麼。" },
+    { "soundId": "ocean",  "durationSec": 130, "crossfadeSec": 20, "volume": 0.6,  "poeticText": "海面像一張大的紙，被風輕輕翻過。" },
+    { "soundId": "rain",   "durationSec": 120, "crossfadeSec": 20, "volume": 0.6,  "poeticText": "雲層飄來，溫柔的雨打在沙上。" },
+    { "soundId": "rain",   "durationSec": 130, "crossfadeSec": 20, "volume": 0.6,  "poeticText": "雨點落進浪裡，再分不出彼此。" },
+    { "soundId": "rain",   "durationSec": 120, "crossfadeSec": 20, "volume": 0.55, "poeticText": "傘也不必撐了，反正全身都在水裡。" },
+    { "soundId": "stream", "durationSec": 130, "crossfadeSec": 20, "volume": 0.55, "poeticText": "雨後的小溪，從岩縫鑽出來，認得回家的路。" },
+    { "soundId": "stream", "durationSec": 120, "crossfadeSec": 20, "volume": 0.5,  "poeticText": "水流低聲說：可以回去了。" },
+    { "soundId": "ocean",  "durationSec": 130, "crossfadeSec": 0,  "volume": 0.5,  "poeticText": "最後一次回頭，海仍在那裡。" }
   ]
 }

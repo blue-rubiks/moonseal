@@ -141,7 +141,7 @@
             <div class="recent inert">
               <span class="num en">0{i + 1}</span>
               <span class="r-glyph"><Glyph kind="moon" size={18} sw={1}/></span>
-              <span class="r-name">{r.type === 'story' ? '故事' : r.type} · {r.refId}</span>
+              <span class="r-name">{r.type === 'story' ? '夜讀' : r.type} · {r.refId}</span>
               <span class="en r-time">{relTime(r.playedAt)}</span>
             </div>
           {/if}

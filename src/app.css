@@ -130,7 +130,7 @@ input, textarea, select {
   text-transform: uppercase;
 }
 
-/* 故事呼吸動畫（單句淡入淡出） */
+/* 夜讀呼吸動畫（單句淡入淡出） */
 @keyframes breathe {
   0%, 100% { opacity: 0.45; }
   50%      { opacity: 1; }

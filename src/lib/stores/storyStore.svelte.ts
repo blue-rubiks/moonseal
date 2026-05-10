@@ -26,7 +26,11 @@ class StoryStore {
       if (e.type === 'segment-start') {
         this.currentIndex = e.index;
         this.currentSegment = e.segment;
-        await audioEngine.crossfadeTo(e.segment.soundId, e.segment.volume, e.segment.crossfadeSec);
+        if (e.index === 0) {
+          await audioEngine.playTrack(e.segment.soundId, e.segment.volume, 2);
+        } else {
+          await audioEngine.crossfadeTo(e.segment.soundId, e.segment.volume, e.segment.crossfadeSec);
+        }
       } else if (e.type === 'story-end' || e.type === 'cancelled') {
         await audioEngine.stopAll(2);
         this.current = null;

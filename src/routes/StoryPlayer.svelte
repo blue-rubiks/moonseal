@@ -31,7 +31,7 @@
   <header>
     <button class="back" onclick={stopAndClose}>
       <Glyph kind="arrow-l" size={16} sw={1.2}/>
-      <span>故事</span>
+      <span>夜讀</span>
     </button>
     <div class="grow"></div>
     <span class="en chapter">第 {idx + 1} 章 / 共 {total} 章</span>

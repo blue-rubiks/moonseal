@@ -17,7 +17,7 @@
   });
 
   let sub = $derived.by(() => {
-    if (storyStore.current) return `第 ${storyStore.currentIndex + 1} 段 · 故事配樂`;
+    if (storyStore.current) return `第 ${storyStore.currentIndex + 1} 段 · 夜讀配樂`;
     const n = Object.keys(audioStore.tracks).length;
     if (n === 0) return '從首頁挑一個聲音開始';
     return `${n} 軌混音`;

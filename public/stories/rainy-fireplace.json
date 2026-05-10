@@ -1,12 +1,21 @@
 {
   "id": "rainy-fireplace",
   "nameKey": "雨夜壁爐",
-  "description": "雨打窗戶，柴火微亮的夜晚",
+  "description": "雨打窗戶、柴火微亮的長夜",
   "builtin": true,
   "totalDurationSec": 1800,
   "segments": [
-    { "soundId": "rain",      "durationSec": 600, "crossfadeSec": 45, "volume": 0.7,  "poeticText": "雨輕輕敲打窗戶。" },
-    { "soundId": "fireplace", "durationSec": 600, "crossfadeSec": 45, "volume": 0.55, "poeticText": "壁爐的柴火劈啪作響。" },
-    { "soundId": "rain",      "durationSec": 600, "crossfadeSec": 0,  "volume": 0.45, "poeticText": "夜深了，雨聲伴你入睡。" }
+    { "soundId": "rain",      "durationSec": 150, "crossfadeSec": 0,  "volume": 0.7,  "poeticText": "雨輕輕敲打窗戶，像有人從遠方寄信來。" },
+    { "soundId": "rain",      "durationSec": 150, "crossfadeSec": 20, "volume": 0.65, "poeticText": "屋簷下的水滴，數著今晚剩下的時辰。" },
+    { "soundId": "rain",      "durationSec": 150, "crossfadeSec": 20, "volume": 0.6,  "poeticText": "玻璃外的世界濕了，玻璃內還是乾的。" },
+    { "soundId": "fireplace", "durationSec": 150, "crossfadeSec": 20, "volume": 0.55, "poeticText": "壁爐的柴火劈啪作響，像在低聲講故事。" },
+    { "soundId": "fireplace", "durationSec": 150, "crossfadeSec": 20, "volume": 0.55, "poeticText": "火光把牆上的影子搖得很慢。" },
+    { "soundId": "fireplace", "durationSec": 150, "crossfadeSec": 20, "volume": 0.5,  "poeticText": "把書翻開，又把書放下；今晚不必讀完。" },
+    { "soundId": "fireplace", "durationSec": 150, "crossfadeSec": 20, "volume": 0.5,  "poeticText": "茶涼了一半，恰好可以入口。" },
+    { "soundId": "rain",      "durationSec": 150, "crossfadeSec": 20, "volume": 0.55, "poeticText": "雨勢轉小，世界開始安靜。" },
+    { "soundId": "fireplace", "durationSec": 150, "crossfadeSec": 20, "volume": 0.45, "poeticText": "柴塌了一塊，火又升起來一些。" },
+    { "soundId": "rain",      "durationSec": 150, "crossfadeSec": 20, "volume": 0.5,  "poeticText": "屋外的腳步聲遠去，雨又獨自下了起來。" },
+    { "soundId": "fireplace", "durationSec": 150, "crossfadeSec": 20, "volume": 0.4,  "poeticText": "火焰縮小成一點橙紅，像夜的瞳孔。" },
+    { "soundId": "rain",      "durationSec": 150, "crossfadeSec": 0,  "volume": 0.45, "poeticText": "夜深了，雨聲伴你入睡。" }
   ]
 }

@@ -1,12 +1,21 @@
 {
   "id": "summer-thunder",
   "nameKey": "夏夜雷雨",
-  "description": "夏天的雷與雨，由近至遠",
+  "description": "夏夜的雷與雨，由遠而近，再由近而遠",
   "builtin": true,
   "totalDurationSec": 1500,
   "segments": [
-    { "soundId": "thunder", "durationSec": 360, "crossfadeSec": 30, "volume": 0.6,  "poeticText": "遠方雷聲，預告了夏夜。" },
-    { "soundId": "rain",    "durationSec": 540, "crossfadeSec": 30, "volume": 0.7,  "poeticText": "豆大的雨珠落下。" },
-    { "soundId": "rain",    "durationSec": 600, "crossfadeSec": 0,  "volume": 0.45, "poeticText": "雨勢漸小，世界安靜下來。" }
+    { "soundId": "thunder", "durationSec": 120, "crossfadeSec": 0,  "volume": 0.55, "poeticText": "遠方雷聲，預告了夏夜。" },
+    { "soundId": "thunder", "durationSec": 130, "crossfadeSec": 20, "volume": 0.6,  "poeticText": "天空有一面銅鼓，被誰輕輕敲了一下。" },
+    { "soundId": "thunder", "durationSec": 120, "crossfadeSec": 20, "volume": 0.6,  "poeticText": "雲還沒到，悶熱卻先到了。" },
+    { "soundId": "rain",    "durationSec": 130, "crossfadeSec": 20, "volume": 0.7,  "poeticText": "豆大的雨珠落下，砸在屋瓦上。" },
+    { "soundId": "rain",    "durationSec": 120, "crossfadeSec": 20, "volume": 0.7,  "poeticText": "風跟著雨進屋，把窗簾翻了一頁又一頁。" },
+    { "soundId": "thunder", "durationSec": 130, "crossfadeSec": 20, "volume": 0.65, "poeticText": "雷在頭頂炸開，像一道白色的閃光抹過心臟。" },
+    { "soundId": "rain",    "durationSec": 120, "crossfadeSec": 20, "volume": 0.65, "poeticText": "雨愈發放肆，世界被沖洗得乾乾淨淨。" },
+    { "soundId": "rain",    "durationSec": 130, "crossfadeSec": 20, "volume": 0.6,  "poeticText": "屋內亮起一盞昏黃的燈，像給夜留了一個門縫。" },
+    { "soundId": "thunder", "durationSec": 120, "crossfadeSec": 20, "volume": 0.45, "poeticText": "雷聲漸遠，往山的另一邊去了。" },
+    { "soundId": "rain",    "durationSec": 130, "crossfadeSec": 20, "volume": 0.55, "poeticText": "雨勢漸小，世界安靜下來。" },
+    { "soundId": "rain",    "durationSec": 120, "crossfadeSec": 20, "volume": 0.5,  "poeticText": "屋簷剩幾滴在數著什麼，沒人催它。" },
+    { "soundId": "rain",    "durationSec": 130, "crossfadeSec": 0,  "volume": 0.45, "poeticText": "夜還很長，先把心放下。" }
   ]
 }

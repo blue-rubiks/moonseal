@@ -1,12 +1,21 @@
 {
   "id": "mountain-stream",
   "nameKey": "山中溪流",
-  "description": "高山溪流伴隨遠方鳥鳴",
+  "description": "高山溪流伴隨鳥鳴與晚風",
   "builtin": true,
   "totalDurationSec": 1500,
   "segments": [
-    { "soundId": "stream", "durationSec": 600, "crossfadeSec": 30, "volume": 0.7,  "poeticText": "溪水從山谷中流下。" },
-    { "soundId": "birds",  "durationSec": 450, "crossfadeSec": 30, "volume": 0.5,  "poeticText": "山中迴盪著鳥鳴。" },
-    { "soundId": "wind",   "durationSec": 450, "crossfadeSec": 0,  "volume": 0.45, "poeticText": "晚風拂過稜線。" }
+    { "soundId": "stream", "durationSec": 120, "crossfadeSec": 0,  "volume": 0.7,  "poeticText": "溪水從山谷中流下。" },
+    { "soundId": "stream", "durationSec": 130, "crossfadeSec": 20, "volume": 0.65, "poeticText": "石頭縫裡有冷的、清醒的東西。" },
+    { "soundId": "stream", "durationSec": 120, "crossfadeSec": 20, "volume": 0.6,  "poeticText": "水聲一直在說話，可是不需要你回答。" },
+    { "soundId": "birds",  "durationSec": 130, "crossfadeSec": 20, "volume": 0.5,  "poeticText": "山中迴盪著鳥鳴，由近至遠，又由遠至近。" },
+    { "soundId": "birds",  "durationSec": 120, "crossfadeSec": 20, "volume": 0.5,  "poeticText": "樹影深處，誰在和誰打招呼。" },
+    { "soundId": "stream", "durationSec": 130, "crossfadeSec": 20, "volume": 0.6,  "poeticText": "彎下腰，水面照得見一張比白天柔軟的臉。" },
+    { "soundId": "wind",   "durationSec": 120, "crossfadeSec": 20, "volume": 0.45, "poeticText": "晚風拂過稜線。" },
+    { "soundId": "wind",   "durationSec": 130, "crossfadeSec": 20, "volume": 0.5,  "poeticText": "雲被吹散了形狀，像沒寄出的信。" },
+    { "soundId": "stream", "durationSec": 120, "crossfadeSec": 20, "volume": 0.55, "poeticText": "水繼續走它的路，不回頭看你。" },
+    { "soundId": "wind",   "durationSec": 130, "crossfadeSec": 20, "volume": 0.45, "poeticText": "山在背後沉默，像一個學會等待的長者。" },
+    { "soundId": "birds",  "durationSec": 120, "crossfadeSec": 20, "volume": 0.4,  "poeticText": "鳥已歸巢，只剩幾聲輕的回音。" },
+    { "soundId": "stream", "durationSec": 130, "crossfadeSec": 0,  "volume": 0.5,  "poeticText": "夜把山合起來，水聲是最後一頁。" }
   ]
 }

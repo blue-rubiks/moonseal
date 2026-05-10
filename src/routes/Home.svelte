@@ -7,7 +7,7 @@
 <section class:mobile={uiStore.mobile}>
   <div class="title">
     <h1>聲音</h1>
-    <span class="subtitle">八種自然之音 · 點擊試聽 · 多選即進入混音</span>
+    <span class="subtitle">八種自然之音 · 點擊試聽 · 多選同時播放</span>
   </div>
   <div class="hline"></div>
 
@@ -19,7 +19,7 @@
 
   <p class="quote">
     "閉上眼睛，讓自然的聲音帶你入眠。"<br/>
-    點擊任一聲音卡片開始，多選即同時播放並自動進入「混音」模式。
+    點擊任一聲音卡片開始，多選即同時播放；前往「混音」頁可微調各軌音量。
   </p>
 </section>
 

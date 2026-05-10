@@ -4,7 +4,7 @@
   const TABS: ReadonlyArray<{ k: Route; label: string }> = [
     { k: 'home',  label: '首頁' },
     { k: 'mix',   label: '混音' },
-    { k: 'story', label: '故事' },
+    { k: 'story', label: '夜讀' },
     { k: 'mine',  label: '我的' }
   ];
 </script>

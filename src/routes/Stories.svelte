@@ -30,7 +30,7 @@
 
   async function deleteCustom(e: MouseEvent, id: string) {
     e.stopPropagation();
-    if (!confirm('確定刪除這個故事？')) return;
+    if (!confirm('確定刪除這篇夜讀？')) return;
     await storyRepo.delete(id);
     await refresh();
   }
@@ -39,12 +39,12 @@
 <section class:mobile={uiStore.mobile}>
   <div class="title">
     <div class="title-l">
-      <h1>故事</h1>
-      <span class="subtitle">搭配音效的詩意短篇 · 單句呼吸式閱讀</span>
+      <h1>夜讀</h1>
+      <span class="subtitle">配著聲音的長卷 · 每段約 2 分鐘 · 單句呼吸式閱讀</span>
     </div>
     <button class="new" onclick={onCreate}>
       <Glyph kind="plus" size={12} sw={1.4}/>
-      新增自訂故事
+      新增自訂夜讀
     </button>
   </div>
   <div class="hline"></div>
@@ -73,8 +73,8 @@
     <div class="section-label">自訂</div>
     {#if customs.length === 0}
       <div class="empty">
-        <div class="empty-title">還沒有自訂故事</div>
-        <div class="empty-hint">點右上「+ 新增自訂故事」建立你自己的旅程</div>
+        <div class="empty-title">還沒有自訂夜讀</div>
+        <div class="empty-hint">點右上「+ 新增自訂夜讀」建立你自己的旅程</div>
       </div>
     {:else}
       <div class="grid">
