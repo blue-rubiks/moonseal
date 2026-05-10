@@ -3,6 +3,8 @@
   import { recentsRepo } from '../lib/storage/RecentsRepo';
   import { mixRepo } from '../lib/storage/MixRepo';
   import { getSoundById, BUILTIN_SOUNDS } from '../lib/audio/builtinSounds';
+  import { loadBuiltinStories } from '../lib/story/builtinStories';
+  import { storyRepo } from '../lib/storage/StoryRepo';
   import { audioStore } from '../lib/stores/audioStore.svelte';
   import { uiStore } from '../lib/stores/uiStore.svelte';
   import { toastStore } from '../lib/stores/toastStore.svelte';
@@ -12,13 +14,23 @@
   let favorites = $state<FavoriteRecord[]>([]);
   let recents = $state<RecentRecord[]>([]);
   let mixes = $state<MixRecord[]>([]);
+  let storyTitles = $state<Record<string, string>>({});
 
   async function refresh() {
-    [favorites, recents, mixes] = await Promise.all([
+    const [fav, rec, mix, builtin, custom] = await Promise.all([
       favoritesRepo.listAll(),
       recentsRepo.listRecent(),
-      mixRepo.listAll()
+      mixRepo.listAll(),
+      loadBuiltinStories().catch(() => []),
+      storyRepo.listAll().catch(() => [])
     ]);
+    favorites = fav;
+    recents = rec;
+    mixes = mix;
+    const titles: Record<string, string> = {};
+    for (const s of builtin) titles[s.id] = s.nameKey;
+    for (const s of custom) titles[s.id] = s.nameKey;
+    storyTitles = titles;
   }
 
   $effect(() => { void refresh(); });
@@ -141,7 +153,7 @@
             <div class="recent inert">
               <span class="num en">0{i + 1}</span>
               <span class="r-glyph"><Glyph kind="moon" size={18} sw={1}/></span>
-              <span class="r-name">{r.type === 'story' ? '夜讀' : r.type} · {r.refId}</span>
+              <span class="r-name">{r.type === 'story' ? `夜讀 · ${storyTitles[r.refId] ?? r.refId}` : `${r.type} · ${r.refId}`}</span>
               <span class="en r-time">{relTime(r.playedAt)}</span>
             </div>
           {/if}

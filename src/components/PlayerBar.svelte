@@ -46,7 +46,7 @@
 
 {#if visible}
   {#if uiStore.mobile}
-    <aside class="bar mobile">
+    <aside class="bar mobile" class:immersive={!!uiStore.currentStory}>
       <button class="play" onclick={stopAll} aria-label="停止全部">
         <Glyph kind="stop" size={11}/>
       </button>
@@ -109,6 +109,9 @@
     display: flex;
     align-items: center;
     gap: 12px;
+  }
+  .bar.mobile.immersive {
+    bottom: calc(8px + env(safe-area-inset-bottom));
   }
   .play {
     width: 36px;

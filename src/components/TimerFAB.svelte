@@ -3,7 +3,10 @@
   import Glyph from './Glyph.svelte';
 </script>
 
-<button class="fab" class:mobile={uiStore.mobile} aria-label="睡眠計時"
+<button class="fab"
+        class:mobile={uiStore.mobile}
+        class:immersive={uiStore.mobile && !!uiStore.currentStory}
+        aria-label="睡眠計時"
         onclick={() => uiStore.openTimer()}>
   <Glyph kind="timer" size={20} sw={1.2}/>
 </button>
@@ -31,5 +34,8 @@
     bottom: calc(140px + env(safe-area-inset-bottom));
     width: 52px;
     height: 52px;
+  }
+  .fab.mobile.immersive {
+    bottom: calc(82px + env(safe-area-inset-bottom));
   }
 </style>

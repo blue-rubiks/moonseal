@@ -22,7 +22,7 @@ class UIStore {
     this.mql.addEventListener('change', apply);
   }
 
-  setRoute(r: Route) { this.route = r; }
+  setRoute(r: Route) { this.route = r; this.currentStory = null; }
   openTimer() { this.timerSheetOpen = true; }
   closeTimer() { this.timerSheetOpen = false; }
   openEditor(initial: CustomStoryRecord | null = null) { this.editor = { open: true, initial }; }
