@@ -66,11 +66,18 @@
   .name { font-size: 0.95rem; }
   .fav {
     position: absolute;
-    top: 0.5rem;
-    right: 0.5rem;
+    top: 0.25rem;
+    right: 0.25rem;
+    width: 2.25rem;
+    height: 2.25rem;
+    display: grid;
+    place-items: center;
     font-size: 1.2rem;
+    line-height: 1;
     color: var(--text-dim);
+    border-radius: 999px;
     z-index: 1;
   }
+  .fav:hover { background: rgba(255, 255, 255, 0.06); }
   .fav.on { color: #ff5f7a; }
 </style>
