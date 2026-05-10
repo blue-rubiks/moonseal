@@ -1,23 +1,47 @@
+/* ─────────────────────────────────────────────────────────
+   白噪音與睡眠 — 設計系統 Tokens
+   紙質禪意 · 變體 A 經典手帖
+   ───────────────────────────────────────────────────────── */
+
+@import url('https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@300;400;500;600;700&family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=JetBrains+Mono:wght@300;400&display=swap');
+
 :root {
-  color-scheme: dark;
-  --bg: #0b0d12;
-  --bg-elevated: #161922;
-  --text: #e8eaef;
-  --text-dim: #8a8f9c;
-  --accent: #6b9bd2;
-  --danger: #d2796b;
-  font-family: system-ui, -apple-system, "PingFang TC", "Noto Sans TC", sans-serif;
+  color-scheme: light;
+  --bg:        #f3ead4;
+  --bg-soft:   #ece0bf;
+  --bg-elev:   #f8f1da;
+  --ink:       #1a1410;
+  --ink-soft:  #4a3f33;
+  --mute:      #8a7d68;
+  --line:      #c8b58c;
+  --line-soft: #ddcfa8;
+  --seal:      #8b3a2f;
+  --gold:      #b08d3c;
+
+  /* 給原本既有元件的相容映射，避免 PR 期間殘留色出現 */
+  --bg-elevated: var(--bg-elev);
+  --text:        var(--ink);
+  --text-dim:    var(--mute);
+  --accent:      var(--seal);
+  --danger:      var(--seal);
+
+  font-family: 'Noto Serif TC', 'Songti TC', '宋体', 'PingFang TC', serif;
   font-size: 16px;
-  line-height: 1.5;
+  line-height: 1.6;
+  font-feature-settings: 'palt';
+  letter-spacing: 0.02em;
+  color: var(--ink);
+  background: var(--bg);
 }
 
 * { box-sizing: border-box; }
 
-html, body { margin: 0; padding: 0; min-height: 100dvh; }
-
-body {
+html, body {
+  margin: 0;
+  padding: 0;
+  min-height: 100dvh;
   background: var(--bg);
-  color: var(--text);
+  color: var(--ink);
   -webkit-font-smoothing: antialiased;
   overscroll-behavior: none;
 }
@@ -29,4 +53,85 @@ button {
   border: 0;
   cursor: pointer;
   padding: 0;
+}
+
+input, textarea, select {
+  font: inherit;
+  color: inherit;
+}
+
+/* 紙張紋理 — 細微噪點，套在容器上 */
+.paper-grain {
+  position: relative;
+}
+.paper-grain::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='120' height='120'><filter id='n'><feTurbulence baseFrequency='0.85' numOctaves='2' seed='3'/><feColorMatrix values='0 0 0 0 0.18 0 0 0 0 0.13 0 0 0 0 0.08 0 0 0 0.10 0'/></filter><rect width='120' height='120' filter='url(%23n)'/></svg>");
+  opacity: 0.55;
+  mix-blend-mode: multiply;
+  z-index: 0;
+}
+
+/* 細墨線 */
+.hline {
+  height: 1px;
+  background: var(--line);
+  transform: scaleY(0.5);
+  transform-origin: top;
+}
+
+/* 印章紅文字 */
+.seal-text {
+  color: var(--seal);
+  font-weight: 500;
+}
+
+/* 西文 / 數字 */
+.en, .num {
+  font-family: 'EB Garamond', 'Cormorant Garamond', serif;
+  font-feature-settings: 'lnum', 'pnum';
+  letter-spacing: 0;
+}
+
+.mono {
+  font-family: 'JetBrains Mono', monospace;
+  letter-spacing: 0;
+}
+
+/* 印章 — 朱砂方印 */
+.stamp {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border: 1.5px solid var(--seal);
+  color: var(--seal);
+  font-family: 'Noto Serif TC', serif;
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 1.05;
+  letter-spacing: 0;
+  writing-mode: vertical-rl;
+  text-orientation: upright;
+  padding: 3px;
+  background: rgba(139, 58, 47, 0.04);
+  flex-shrink: 0;
+}
+
+/* Section label（小字 letter-spaced uppercase） */
+.section-label {
+  font-size: 11px;
+  letter-spacing: 0.4em;
+  color: var(--mute);
+  text-transform: uppercase;
+}
+
+/* 故事呼吸動畫（單句淡入淡出） */
+@keyframes breathe {
+  0%, 100% { opacity: 0.45; }
+  50%      { opacity: 1; }
 }

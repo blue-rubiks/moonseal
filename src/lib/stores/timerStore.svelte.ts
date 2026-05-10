@@ -6,6 +6,7 @@ import { settingsRepo } from '../storage/SettingsRepo';
 
 class TimerStore {
   remainingSec = $state(0);
+  totalSec = $state(0);
   running = $state(false);
   fadeOutSec = $state(30);
   private timer: SleepTimer;
@@ -28,7 +29,10 @@ class TimerStore {
   }
 
   start(totalMin: number) {
-    this.timer.start({ totalSec: totalMin * 60, fadeOutSec: this.fadeOutSec });
+    const total = totalMin * 60;
+    this.timer.start({ totalSec: total, fadeOutSec: this.fadeOutSec });
+    this.totalSec = total;
+    this.remainingSec = total;
     this.running = true;
     this.startTick();
   }
@@ -38,6 +42,7 @@ class TimerStore {
     this.running = false;
     this.stopTick();
     this.remainingSec = 0;
+    this.totalSec = 0;
   }
 
   private startTick() {

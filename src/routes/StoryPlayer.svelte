@@ -1,6 +1,8 @@
 <script lang="ts">
   import { storyStore } from '../lib/stores/storyStore.svelte';
-  import PoeticText from '../components/PoeticText.svelte';
+  import { uiStore } from '../lib/stores/uiStore.svelte';
+  import { fmtMin } from '../lib/util/format';
+  import Glyph from '../components/Glyph.svelte';
   import type { StoryDef } from '../lib/story/types';
 
   interface Props {
@@ -18,41 +20,141 @@
     storyStore.stop();
     onClose();
   }
+
+  let seg = $derived(storyStore.currentSegment);
+  let idx = $derived(storyStore.currentIndex);
+  let total = $derived(story.segments.length);
+  let line = $derived(seg?.poeticText ?? '');
 </script>
 
-<div class="player">
+<div class="reader paper-grain" class:mobile={uiStore.mobile}>
   <header>
-    <button class="back" onclick={stopAndClose} aria-label="返回">←</button>
-    <h2>{story.nameKey}</h2>
+    <button class="back" onclick={stopAndClose}>
+      <Glyph kind="arrow-l" size={16} sw={1.2}/>
+      <span>故事</span>
+    </button>
+    <div class="grow"></div>
+    <span class="en chapter">第 {idx + 1} 章 / 共 {total} 章</span>
   </header>
 
   <div class="stage">
-    <PoeticText text={storyStore.currentSegment?.poeticText} />
-    <p class="progress">
-      {storyStore.currentIndex + 1} / {story.segments.length}
-    </p>
+    <div class="kicker">{story.nameKey}</div>
+    {#key idx}
+      <p class="line">{line || ' '}</p>
+    {/key}
+    <div class="dots">
+      {#each story.segments as _, i (i)}
+        <span class="dot" class:on={i === idx}></span>
+      {/each}
+    </div>
+    <div class="en index">{idx + 1} / {total}</div>
   </div>
 
-  <button class="stop" onclick={stopAndClose}>停止</button>
+  <div class="footer">
+    <span class="time">共讀 · {fmtMin(story.totalDurationSec)}</span>
+    <span class="stamp">夜讀</span>
+  </div>
 </div>
 
 <style>
-  .player {
+  .reader {
+    position: relative;
+    z-index: 2;
     display: flex;
     flex-direction: column;
-    min-height: calc(100dvh - 4rem);
-    padding: 1.5rem;
+    min-height: 100dvh;
   }
-  header { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 2rem; }
-  .back { font-size: 1.5rem; padding: 0.25rem 0.5rem; }
-  h2 { margin: 0; font-weight: 600; }
-  .stage { flex: 1; display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 2rem; }
-  .progress { color: var(--text-dim); font-size: 0.85rem; }
-  .stop {
-    background: var(--bg-elevated);
-    border-radius: 999px;
-    padding: 0.85rem 2rem;
-    align-self: center;
-    margin-top: 2rem;
+  header {
+    padding: 28px 56px 0;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    position: relative;
+    z-index: 2;
+  }
+  .reader.mobile header { padding: 20px 24px 0; }
+  .back {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    color: var(--ink-soft);
+    font-size: 13px;
+  }
+  .grow { flex: 1; }
+  .chapter {
+    font-size: 11px;
+    color: var(--mute);
+    letter-spacing: 0.2em;
+  }
+
+  .stage {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 0 80px 96px;
+    position: relative;
+    z-index: 2;
+  }
+  .reader.mobile .stage { padding: 0 32px 140px; }
+  .kicker {
+    font-size: 13px;
+    color: var(--mute);
+    letter-spacing: 0.4em;
+    margin-bottom: 56px;
+  }
+  .reader.mobile .kicker { margin-bottom: 36px; }
+  .line {
+    font-size: 38px;
+    font-weight: 400;
+    line-height: 1.7;
+    text-align: center;
+    max-width: 720px;
+    margin: 0;
+    color: var(--ink);
+    animation: breathe 5s ease-in-out infinite;
+    min-height: 2em;
+  }
+  .reader.mobile .line { font-size: 26px; }
+
+  .dots {
+    display: flex;
+    gap: 8px;
+    margin-top: 96px;
+    align-items: center;
+  }
+  .reader.mobile .dots { margin-top: 56px; }
+  .dot {
+    width: 6px;
+    height: 2px;
+    background: var(--line);
+    transition: width .4s, background .4s;
+  }
+  .dot.on {
+    width: 24px;
+    background: var(--ink);
+  }
+  .index {
+    font-size: 12px;
+    color: var(--mute);
+    letter-spacing: 0.2em;
+    margin-top: 14px;
+  }
+
+  .footer {
+    position: absolute;
+    right: 56px;
+    bottom: 110px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    z-index: 3;
+  }
+  .reader.mobile .footer { right: 24px; bottom: 150px; }
+  .time {
+    font-size: 12px;
+    color: var(--mute);
+    font-style: italic;
   }
 </style>

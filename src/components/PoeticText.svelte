@@ -3,34 +3,27 @@
   let { text }: Props = $props();
 
   let displayText = $state('');
-  let visible = $state(false);
 
   $effect(() => {
-    if (!text) {
-      visible = false;
-      return;
-    }
-    visible = false;
+    if (!text) { displayText = ''; return; }
     const fadeOutTimer = setTimeout(() => {
       displayText = text;
-      visible = true;
     }, 600);
     return () => clearTimeout(fadeOutTimer);
   });
 </script>
 
-<p class="poetic" class:visible>{displayText}</p>
+<p class="poetic">{displayText}</p>
 
 <style>
   .poetic {
     margin: 0;
-    font-size: 1.05rem;
-    line-height: 1.7;
-    color: var(--text);
+    font-family: 'Noto Serif TC', serif;
+    font-size: 1.15rem;
+    line-height: 1.8;
+    color: var(--ink);
     text-align: center;
-    opacity: 0;
-    transition: opacity 1.2s ease;
     min-height: 3em;
+    animation: breathe 5s ease-in-out infinite;
   }
-  .poetic.visible { opacity: 0.85; }
 </style>

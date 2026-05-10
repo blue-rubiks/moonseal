@@ -1,83 +1,302 @@
 <script lang="ts">
   import { favoritesRepo } from '../lib/storage/FavoritesRepo';
   import { recentsRepo } from '../lib/storage/RecentsRepo';
-  import { getSoundById } from '../lib/audio/builtinSounds';
+  import { mixRepo } from '../lib/storage/MixRepo';
+  import { getSoundById, BUILTIN_SOUNDS } from '../lib/audio/builtinSounds';
   import { audioStore } from '../lib/stores/audioStore.svelte';
-  import type { FavoriteRecord, RecentRecord } from '../lib/storage/db';
+  import { uiStore } from '../lib/stores/uiStore.svelte';
+  import { toastStore } from '../lib/stores/toastStore.svelte';
+  import Glyph from '../components/Glyph.svelte';
+  import type { FavoriteRecord, RecentRecord, MixRecord } from '../lib/storage/db';
 
   let favorites = $state<FavoriteRecord[]>([]);
   let recents = $state<RecentRecord[]>([]);
+  let mixes = $state<MixRecord[]>([]);
 
   async function refresh() {
-    favorites = await favoritesRepo.listAll();
-    recents = await recentsRepo.listRecent();
+    [favorites, recents, mixes] = await Promise.all([
+      favoritesRepo.listAll(),
+      recentsRepo.listRecent(),
+      mixRepo.listAll()
+    ]);
   }
 
   $effect(() => { void refresh(); });
 
-  async function play(refId: string) {
+  async function playSound(refId: string) {
     await audioStore.toggleSound(refId, 0.7);
     await refresh();
   }
 
-  function labelFor(refId: string): string {
-    return getSoundById(refId)?.nameKey ?? refId;
+  async function applyMix(m: MixRecord) {
+    await audioStore.stopAll(0.3);
+    for (const t of m.tracks) {
+      await audioStore.toggleSound(t.soundId, t.volume);
+      audioStore.setVolume(t.soundId, t.volume);
+    }
+    toastStore.show(`已套用「${m.name}」`);
   }
+
+  async function deleteMix(e: MouseEvent, id: string) {
+    e.stopPropagation();
+    if (!confirm('刪除這個混音？')) return;
+    await mixRepo.delete(id);
+    await refresh();
+  }
+
+  async function removeFav(e: MouseEvent, id: string) {
+    e.stopPropagation();
+    await favoritesRepo.remove(id);
+    await refresh();
+  }
+
+  function relTime(ts: number): string {
+    const diff = Date.now() - ts;
+    const min = Math.floor(diff / 60000);
+    if (min < 1) return '剛剛';
+    if (min < 60) return `${min} 分鐘前`;
+    const h = Math.floor(min / 60);
+    if (h < 24) return `${h} 小時前`;
+    const d = Math.floor(h / 24);
+    return `${d} 天前`;
+  }
+
+  let soundFavs = $derived(favorites.filter((f) => f.type === 'sound'));
 </script>
 
-<section>
-  <h2>收藏</h2>
-  {#if favorites.length === 0}
-    <p class="empty">還沒有收藏</p>
-  {:else}
-    <ul>
-      {#each favorites as fav (fav.id)}
-        <li>
-          <button onclick={() => play(fav.refId)}>
-            <span class="type">{fav.type}</span>
-            <span>{labelFor(fav.refId)}</span>
-          </button>
-        </li>
-      {/each}
-    </ul>
-  {/if}
+<section class:mobile={uiStore.mobile}>
+  <div class="title">
+    <h1>我的</h1>
+    <span class="subtitle">收藏 · 我的混音 · 最近播放</span>
+  </div>
+  <div class="hline"></div>
 
-  <h2>最近播放</h2>
-  {#if recents.length === 0}
-    <p class="empty">尚未播放任何聲音</p>
-  {:else}
-    <ul>
-      {#each recents as r (r.id)}
-        <li>
-          <button onclick={() => play(r.refId)}>
-            <span class="type">{r.type}</span>
-            <span>{labelFor(r.refId)}</span>
-          </button>
-        </li>
-      {/each}
-    </ul>
-  {/if}
+  <div class="block">
+    <div class="section-label">收藏聲音</div>
+    <div class="chips">
+      {#if soundFavs.length === 0}
+        <div class="empty-inline">還沒有收藏 — 在首頁聲音卡片右上角點愛心。</div>
+      {:else}
+        {#each soundFavs as f (f.id)}
+          {@const s = getSoundById(f.refId)}
+          {#if s}
+            <span class="chip">
+              <button class="chip-hit" onclick={() => playSound(s.id)}>
+                <Glyph kind={s.iconKey} size={16} sw={1}/>
+                {s.nameKey}
+              </button>
+              <button class="chip-x" onclick={(e) => removeFav(e, f.id)} aria-label="移除收藏">
+                <Glyph kind="close" size={10}/>
+              </button>
+            </span>
+          {/if}
+        {/each}
+      {/if}
+    </div>
+  </div>
+
+  <div class="block">
+    <div class="section-label">我的混音</div>
+    {#if mixes.length === 0}
+      <div class="empty">
+        <div class="empty-title">還沒有自訂混音</div>
+        <div class="empty-hint">在「混音」頁多選音效後點「儲存為我的混音」。</div>
+      </div>
+    {:else}
+      <div class="grid">
+        {#each mixes as m (m.id)}
+          <div class="mix">
+            <button class="mix-hit" onclick={() => applyMix(m)} aria-label={`套用 ${m.name}`}>
+              <span class="mix-name">{m.name}</span>
+              <span class="mix-tracks">
+                {m.tracks.map((t) => getSoundById(t.soundId)?.nameKey ?? t.soundId).join(' · ')}
+              </span>
+              <span class="en mix-time">{relTime(m.createdAt)}</span>
+            </button>
+            <button class="del" onclick={(e) => deleteMix(e, m.id)} aria-label="刪除">
+              <Glyph kind="close" size={12}/>
+            </button>
+          </div>
+        {/each}
+      </div>
+    {/if}
+  </div>
+
+  <div class="block">
+    <div class="section-label">最近播放</div>
+    {#if recents.length === 0}
+      <div class="empty-inline">尚未播放任何聲音</div>
+    {:else}
+      <div class="recents">
+        {#each recents as r, i (r.id)}
+          {@const s = r.type === 'sound' ? getSoundById(r.refId) : null}
+          {#if s}
+            <button class="recent" onclick={() => playSound(s.id)}>
+              <span class="num en">0{i + 1}</span>
+              <span class="r-glyph"><Glyph kind={s.iconKey} size={18} sw={1}/></span>
+              <span class="r-name">{s.nameKey}</span>
+              <span class="en r-time">{relTime(r.playedAt)}</span>
+            </button>
+          {:else}
+            <div class="recent inert">
+              <span class="num en">0{i + 1}</span>
+              <span class="r-glyph"><Glyph kind="moon" size={18} sw={1}/></span>
+              <span class="r-name">{r.type === 'story' ? '故事' : r.type} · {r.refId}</span>
+              <span class="en r-time">{relTime(r.playedAt)}</span>
+            </div>
+          {/if}
+        {/each}
+      </div>
+    {/if}
+  </div>
 </section>
 
 <style>
-  section { padding: 1.5rem; }
-  h2 { font-weight: 600; margin: 0 0 0.75rem; font-size: 1rem; }
-  h2:not(:first-child) { margin-top: 1.5rem; }
-  .empty { color: var(--text-dim); font-size: 0.9rem; }
-  ul { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 0.5rem; }
-  li button {
+  section {
+    padding: 32px 56px 32px;
+    position: relative;
+    z-index: 2;
+  }
+  section.mobile { padding: 16px 24px 32px; }
+  .title { display: flex; align-items: flex-end; gap: 14px; flex-wrap: wrap; }
+  h1 {
+    font-size: clamp(36px, 5vw, 56px);
+    font-weight: 500;
+    line-height: 1;
+    letter-spacing: 0.02em;
+    margin: 0;
+  }
+  .subtitle {
+    font-size: 13px;
+    color: var(--mute);
+    padding-bottom: 8px;
+    letter-spacing: 0.1em;
+  }
+  .hline {
+    height: 1px;
+    background: var(--line);
+    transform: scaleY(0.5);
+    margin: 18px 0 24px;
+  }
+  .block { margin-top: 24px; }
+  .section-label {
+    font-size: 11px;
+    letter-spacing: 0.4em;
+    color: var(--mute);
+    text-transform: uppercase;
+    margin-bottom: 14px;
+  }
+
+  .chips { display: flex; flex-wrap: wrap; gap: 10px; }
+  .chip {
+    display: inline-flex;
+    align-items: center;
+    border: 1px solid var(--line);
+    color: var(--ink);
+    font-size: 14px;
+  }
+  .chip:hover { border-color: var(--ink); }
+  .chip-hit {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 8px 8px 14px;
+    color: inherit;
+    background: transparent;
+    border: 0;
+    cursor: pointer;
+  }
+  .chip-x {
+    padding: 8px 10px;
+    color: var(--mute);
+    border-left: 1px solid var(--line);
+    line-height: 0;
+  }
+  .chip-x:hover { color: var(--seal); }
+
+  .empty {
+    padding: 24px 22px;
+    border: 1px dashed var(--line);
+    text-align: center;
+    color: var(--mute);
+  }
+  .empty-title { font-size: 13px; margin-bottom: 4px; }
+  .empty-hint { font-size: 11px; font-style: italic; }
+  .empty-inline {
+    color: var(--mute);
+    font-size: 13px;
+    font-style: italic;
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+  }
+  section.mobile .grid { grid-template-columns: 1fr; }
+  .mix {
+    position: relative;
+    border: 1px solid var(--line);
+    background: var(--bg-elev);
+  }
+  .mix:hover { border-color: var(--ink); }
+  .mix-hit {
     width: 100%;
     text-align: left;
-    background: var(--bg-elevated);
-    border-radius: 10px;
-    padding: 0.75rem 1rem;
+    padding: 16px 18px;
+    background: transparent;
+    border: 0;
+    cursor: pointer;
+    color: inherit;
     display: flex;
-    gap: 0.75rem;
+    flex-direction: column;
+    gap: 6px;
   }
-  .type {
-    font-size: 0.7rem;
-    color: var(--text-dim);
-    text-transform: uppercase;
-    align-self: center;
+  .mix-name { display: block; font-size: 16px; font-weight: 500; }
+  .mix-tracks {
+    display: block;
+    font-size: 12px;
+    color: var(--ink-soft);
+    line-height: 1.55;
   }
+  .mix-time {
+    display: block;
+    font-size: 10px;
+    color: var(--mute);
+    letter-spacing: 0.15em;
+    margin-top: 4px;
+  }
+  .del {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    color: var(--mute);
+    padding: 6px;
+    line-height: 0;
+  }
+  .del:hover { color: var(--seal); }
+
+  .recents { display: flex; flex-direction: column; }
+  .recent {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 12px 4px;
+    border-bottom: 1px solid var(--line-soft);
+    cursor: pointer;
+    background: transparent;
+    border-top: 0;
+    border-left: 0;
+    border-right: 0;
+    color: inherit;
+    text-align: left;
+    width: 100%;
+  }
+  .recent:hover { background: var(--bg-elev); }
+  .recent.inert { cursor: default; }
+  .recent.inert:hover { background: transparent; }
+  .num { font-size: 11px; color: var(--mute); min-width: 18px; }
+  .r-glyph { color: var(--ink-soft); line-height: 0; }
+  .r-name { font-size: 14px; flex: 1; }
+  .r-time { font-size: 11px; color: var(--mute); }
 </style>
