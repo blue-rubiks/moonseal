@@ -1,4 +1,5 @@
 import { getDB, type MixRecord } from './db';
+import { uuid } from '../util/uuid';
 
 export interface SaveMixInput {
   id?: string;
@@ -9,7 +10,7 @@ export interface SaveMixInput {
 export class MixRepo {
   async save(input: SaveMixInput): Promise<MixRecord> {
     const db = await getDB();
-    const id = input.id ?? crypto.randomUUID();
+    const id = input.id ?? uuid();
     const existing = await db.get('mixes', id);
     const record: MixRecord = {
       id,

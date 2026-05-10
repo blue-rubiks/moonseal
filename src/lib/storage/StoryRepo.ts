@@ -1,5 +1,6 @@
 import { getDB, type CustomStoryRecord as RawRecord } from './db';
 import type { StorySegment } from '../story/types';
+import { uuid } from '../util/uuid';
 
 export interface CustomStoryRecord extends Omit<RawRecord, 'segments'> {
   segments: StorySegment[];
@@ -14,7 +15,7 @@ export interface SaveStoryInput {
 export class StoryRepo {
   async save(input: SaveStoryInput): Promise<CustomStoryRecord> {
     const db = await getDB();
-    const id = input.id ?? crypto.randomUUID();
+    const id = input.id ?? uuid();
     const existing = (await db.get('customStories', id)) as CustomStoryRecord | undefined;
     const now = Date.now();
     const totalDurationSec = input.segments.reduce((sum, s) => sum + s.durationSec, 0);

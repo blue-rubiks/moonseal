@@ -1,4 +1,5 @@
 import { getDB, type FavoriteRecord } from './db';
+import { uuid } from '../util/uuid';
 
 export type FavoriteType = FavoriteRecord['type'];
 
@@ -11,7 +12,7 @@ export class FavoritesRepo {
   async add(input: AddFavoriteInput): Promise<FavoriteRecord> {
     const db = await getDB();
     const record: FavoriteRecord = {
-      id: crypto.randomUUID(),
+      id: uuid(),
       type: input.type,
       refId: input.refId,
       addedAt: Date.now()

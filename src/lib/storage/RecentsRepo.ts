@@ -1,4 +1,5 @@
 import { getDB, type RecentRecord } from './db';
+import { uuid } from '../util/uuid';
 
 export const MAX_RECENTS = 20;
 
@@ -21,7 +22,7 @@ export class RecentsRepo {
       }
     }
     const record: RecentRecord = {
-      id: crypto.randomUUID(),
+      id: uuid(),
       type,
       refId,
       playedAt: nextPlayedAt()
