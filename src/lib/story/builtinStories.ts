@@ -13,7 +13,7 @@ export type BuiltinStoryId = typeof BUILTIN_STORY_IDS[number];
 export async function loadBuiltinStories(): Promise<StoryDef[]> {
   const out: StoryDef[] = [];
   for (const id of BUILTIN_STORY_IDS) {
-    const res = await fetch(`/stories/${id}.json`);
+    const res = await fetch(`${import.meta.env.BASE_URL}stories/${id}.json`);
     if (!res.ok) throw new Error(`failed to load story: ${id}`);
     out.push(await res.json() as StoryDef);
   }

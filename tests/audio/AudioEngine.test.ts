@@ -87,7 +87,7 @@ describe('AudioEngine', () => {
     await engine.initialize();
     await engine.playTrack('ocean', 0.7);
     expect(playerInstances).toHaveLength(1);
-    expect(playerInstances[0]?.src).toBe('/audio/ocean.mp3');
+    expect(playerInstances[0]?.src).toBe(`${import.meta.env.BASE_URL}audio/ocean.mp3`);
     expect(playerInstances[0]?.loop).toBe(true);
     expect(playerInstances[0]?.start).toHaveBeenCalled();
   });
