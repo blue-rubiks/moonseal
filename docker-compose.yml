@@ -1,8 +1,8 @@
 services:
   web:
     build: .
-    image: whitenoise:latest
-    container_name: whitenoise
+    image: moonseal:latest
+    container_name: moonseal
     ports:
       - "8080:80"
     restart: unless-stopped

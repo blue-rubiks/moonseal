@@ -7,21 +7,24 @@ export default defineConfig({
     svelte(),
     VitePWA({
       registerType: 'autoUpdate',
-      includeAssets: ['icons/*.png', 'audio/*.mp3', 'stories/*.json'],
+      includeAssets: ['brand/*', 'audio/*.mp3', 'stories/*.json'],
       manifest: {
         name: '白噪音與睡眠',
-        short_name: '白噪音',
-        description: '專為助眠、放鬆、專注設計的白噪音 App',
+        short_name: '夜眠',
+        description: '8 種自然音效 · 多軌混音 · 故事模式 · 睡眠計時',
         lang: 'zh-Hant',
         start_url: '/',
         display: 'standalone',
-        background_color: '#0b0d12',
-        theme_color: '#0b0d12',
+        background_color: '#f3ead4',
+        theme_color: '#f3ead4',
         orientation: 'portrait',
         icons: [
-          { src: '/icons/icon-192.png', sizes: '192x192', type: 'image/png' },
-          { src: '/icons/icon-512.png', sizes: '512x512', type: 'image/png' },
-          { src: '/icons/icon-maskable-512.png', sizes: '512x512', type: 'image/png', purpose: 'maskable' }
+          { src: '/brand/favicon.svg', sizes: 'any', type: 'image/svg+xml' },
+          { src: '/brand/icon-192.png', sizes: '192x192', type: 'image/png' },
+          { src: '/brand/icon-512.png', sizes: '512x512', type: 'image/png' },
+          { src: '/brand/icon-192-maskable.png', sizes: '192x192', type: 'image/png', purpose: 'maskable' },
+          { src: '/brand/icon-512-maskable.png', sizes: '512x512', type: 'image/png', purpose: 'maskable' },
+          { src: '/brand/apple-touch-icon.png', sizes: '180x180', type: 'image/png' }
         ]
       },
       workbox: {
