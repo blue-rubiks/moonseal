@@ -18,8 +18,11 @@ export class StoryRunner {
 
   async run(segments: StorySegment[]): Promise<void> {
     if (this.active) throw new Error('StoryRunner already running');
+    if (this.cancelled) {
+      this.emit({ type: 'cancelled' });
+      return;
+    }
     this.active = true;
-    this.cancelled = false;
 
     try {
       for (let i = 0; i < segments.length; i++) {

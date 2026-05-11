@@ -24,6 +24,7 @@ class AudioStore {
 
   private runner: StoryRunner | null = null;
   private busy: Promise<unknown> | null = null;
+  private pendingSegment: Promise<void> | null = null;
 
   isPlaying = $derived(this.mode !== 'idle');
 
@@ -86,21 +87,27 @@ class AudioStore {
 
       const runner = new StoryRunner();
       this.runner = runner;
-      runner.on(async (e) => {
+      runner.on((e) => {
         if (e.type === 'segment-start') {
           this.currentIndex = e.index;
           this.currentSegment = e.segment;
-          try {
-            if (e.index === 0) {
-              await audioEngine.playTrack(e.segment.soundId, e.segment.volume, 2);
-            } else {
-              await audioEngine.crossfadeTo(e.segment.soundId, e.segment.volume, e.segment.crossfadeSec);
+          const work = (async () => {
+            try {
+              if (e.index === 0) {
+                await audioEngine.playTrack(e.segment.soundId, e.segment.volume, 2);
+              } else {
+                await audioEngine.crossfadeTo(e.segment.soundId, e.segment.volume, e.segment.crossfadeSec);
+              }
+            } catch (err) {
+              const msg = err instanceof Error ? err.message : '夜讀載入失敗';
+              toastStore.show(`夜讀載入失敗：${msg}`, 'error');
+              runner.cancel();
             }
-          } catch (err) {
-            const msg = err instanceof Error ? err.message : '夜讀載入失敗';
-            toastStore.show(`夜讀載入失敗：${msg}`, 'error');
-            runner.cancel();
-          }
+          })();
+          this.pendingSegment = work;
+          void work.finally(() => {
+            if (this.pendingSegment === work) this.pendingSegment = null;
+          });
         } else if (e.type === 'story-end') {
           this.currentStory = null;
           this.currentSegment = null;
@@ -112,6 +119,9 @@ class AudioStore {
       });
       return runner;
     });
+    // 序列鎖在 setup 完成後就釋放，到這裡之前 stopStory/stopAll 可能搶先把 this.runner 清掉
+    // 若已被取代或清空，就不要啟動 run（否則 StoryRunner 會無視之前的 cancel 開始播）
+    if (this.runner !== r) return;
     await r.run(story.segments);
   }
 
@@ -126,6 +136,7 @@ class AudioStore {
     await this.#serialize(async () => {
       try {
         this.runner?.cancel();
+        await this.#flushPendingSegment();
         await audioEngine.stopAll(fadeOutSec);
       } finally {
         this.tracks = {};
@@ -133,6 +144,7 @@ class AudioStore {
         this.currentSegment = null;
         this.currentIndex = 0;
         this.runner = null;
+        this.pendingSegment = null;
         this.mode = 'idle';
       }
     });
@@ -150,12 +162,20 @@ class AudioStore {
 
   async #leaveStorySync(fadeSec: number) {
     this.runner?.cancel();
+    await this.#flushPendingSegment();
     await audioEngine.stopAll(fadeSec);
     this.currentStory = null;
     this.currentSegment = null;
     this.currentIndex = 0;
     this.runner = null;
+    this.pendingSegment = null;
     this.mode = 'idle';
+  }
+
+  async #flushPendingSegment() {
+    const p = this.pendingSegment;
+    if (!p) return;
+    try { await p; } catch { /* segment-start listener 內部已 toast/cancel，忽略 */ }
   }
 
   async #serialize<T>(fn: () => Promise<T>): Promise<T> {

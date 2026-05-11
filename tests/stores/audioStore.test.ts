@@ -132,6 +132,59 @@ describe('audioStore — mode lifecycle', () => {
   });
 });
 
+describe('audioStore — race: stopStory between startStory setup and run()', () => {
+  beforeEach(reset);
+
+  it('stopStory called after setup but before run() starts should prevent any segment from playing', async () => {
+    // 把 startStory 的 promise 抓著但不 await，模擬 UI side cleanup 在 await r.run 之前搶先呼 stopStory
+    const startP = audioStore.startStory(story);
+    // 等 #serialize 完成 setup（mode 已是 story、runner 已建立）
+    await Promise.resolve();
+    await Promise.resolve();
+    expect(audioStore.mode).toBe('story');
+
+    // 此時 startStory 的 await r.run 還沒實際開跑（同一個 microtask queue 還沒輪到）
+    // 模擬 StoryPlayer 卸載觸發 stopStory
+    const stopP = audioStore.stopStory();
+    await stopP;
+    await startP;
+
+    // 不該有任何 segment 進到 engine
+    expect(mocks.playTrack).not.toHaveBeenCalled();
+    expect(mocks.crossfadeTo).not.toHaveBeenCalled();
+    expect(audioStore.mode).toBe('idle');
+    expect(audioStore.currentStory).toBeNull();
+  });
+});
+
+describe('audioStore — race: stopStory before in-flight playTrack resolves', () => {
+  beforeEach(reset);
+
+  it('stopStory waits for pending segment audio before fading, no ghost track leaks', async () => {
+    let resolvePlay: (() => void) | null = null;
+    mocks.playTrack.mockImplementationOnce(
+      () => new Promise<void>((r) => { resolvePlay = r; })
+    );
+
+    const startP = audioStore.startStory(story);
+    await new Promise((r) => setTimeout(r, 5));
+    expect(resolvePlay).not.toBeNull();
+    expect(mocks.stopAll).not.toHaveBeenCalled();
+
+    const stopP = audioStore.stopStory();
+    await new Promise((r) => setTimeout(r, 5));
+    // engine.stopAll 不該在 playTrack 還沒回來前被呼叫，否則 ghost track 會漏網
+    expect(mocks.stopAll).not.toHaveBeenCalled();
+
+    resolvePlay!();
+    await stopP;
+    await startP;
+
+    expect(mocks.stopAll).toHaveBeenCalled();
+    expect(audioStore.mode).toBe('idle');
+  });
+});
+
 describe('audioStore — preview channel', () => {
   beforeEach(reset);
 

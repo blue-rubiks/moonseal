@@ -56,4 +56,17 @@ describe('StoryRunner', () => {
     await vi.advanceTimersByTimeAsync(0);
     await p1;
   });
+
+  it('cancel() before run() prevents any segment-start, emits cancelled', async () => {
+    const events: StoryEvent[] = [];
+    const runner = new StoryRunner();
+    runner.on((e) => events.push(e));
+
+    runner.cancel();
+    await runner.run(segments);
+
+    expect(events.filter((e) => e.type === 'segment-start')).toHaveLength(0);
+    expect(events.find((e) => e.type === 'cancelled')).toBeDefined();
+    expect(events.find((e) => e.type === 'story-end')).toBeUndefined();
+  });
 });
