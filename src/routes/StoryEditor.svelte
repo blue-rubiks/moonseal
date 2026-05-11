@@ -172,8 +172,8 @@
   }
   .top-stamp {
     position: absolute;
-    right: 28px;
-    top: -18px;
+    right: 56px;
+    top: 14px;
     background: var(--bg);
     z-index: 3;
   }
