@@ -18,13 +18,14 @@ export class StoryRepo {
     const id = input.id ?? uuid();
     const existing = (await db.get('customStories', id)) as CustomStoryRecord | undefined;
     const now = Date.now();
-    const totalDurationSec = input.segments.reduce((sum, s) => sum + s.durationSec, 0);
+    const segments = structuredClone(input.segments);
+    const totalDurationSec = segments.reduce((sum, s) => sum + s.durationSec, 0);
     const record: CustomStoryRecord = {
       id,
       nameKey: input.name,
       description: '',
       builtin: false,
-      segments: input.segments,
+      segments,
       totalDurationSec,
       createdAt: existing?.createdAt ?? now,
       updatedAt: now

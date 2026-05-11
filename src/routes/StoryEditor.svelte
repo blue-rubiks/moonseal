@@ -20,7 +20,7 @@
   let segments = $state<StorySegment[]>(
     // svelte-ignore state_referenced_locally
     initial?.segments
-      ? structuredClone(initial.segments)
+      ? ($state.snapshot(initial.segments) as StorySegment[])
       : [
           { soundId: BUILTIN_SOUNDS[0]!.id, durationSec: 60, crossfadeSec: 5, volume: 0.7, poeticText: '' }
         ]
@@ -50,7 +50,7 @@
   async function save() {
     const input: { id?: string; name: string; segments: StorySegment[] } = {
       name: name.trim(),
-      segments
+      segments: $state.snapshot(segments) as StorySegment[]
     };
     if (initial?.id) input.id = initial.id;
     await storyRepo.save(input);

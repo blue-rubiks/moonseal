@@ -49,4 +49,12 @@ describe('StoryRepo', () => {
     await repo.delete(s.id);
     expect(await repo.getById(s.id)).toBeUndefined();
   });
+
+  it('save() deep-clones segments so reactive proxies survive IDB structured clone', async () => {
+    const repo = new StoryRepo();
+    const input = [{ soundId: 'rain', durationSec: 60, crossfadeSec: 5, volume: 0.7 }];
+    const story = await repo.save({ name: 'X', segments: input });
+    expect(story.segments).not.toBe(input);
+    expect(story.segments).toEqual(input);
+  });
 });
