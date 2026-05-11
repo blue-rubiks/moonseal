@@ -45,6 +45,16 @@ export class RecentsRepo {
     const db = await getDB();
     await db.clear('recents');
   }
+
+  async removeByRef(type: RecentType, refId: string): Promise<void> {
+    const db = await getDB();
+    const all = await db.getAll('recents');
+    for (const r of all) {
+      if (r.type === type && r.refId === refId) {
+        await db.delete('recents', r.id);
+      }
+    }
+  }
 }
 
 export const recentsRepo = new RecentsRepo();

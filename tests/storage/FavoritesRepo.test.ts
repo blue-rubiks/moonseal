@@ -49,4 +49,14 @@ describe('FavoritesRepo', () => {
     expect(all[0]?.refId).toBe('b');
     expect(all[1]?.refId).toBe('a');
   });
+
+  it('removeByRef() removes only matching type+refId, preserves others', async () => {
+    const repo = new FavoritesRepo();
+    await repo.add({ type: 'story', refId: 'a' });
+    await repo.add({ type: 'sound', refId: 'a' });
+    await repo.add({ type: 'story', refId: 'b' });
+    await repo.removeByRef('story', 'a');
+    const list = await repo.listAll();
+    expect(list.map((f) => `${f.type}:${f.refId}`).sort()).toEqual(['sound:a', 'story:b']);
+  });
 });

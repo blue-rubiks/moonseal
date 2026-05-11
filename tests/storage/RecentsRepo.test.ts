@@ -38,4 +38,14 @@ describe('RecentsRepo', () => {
     expect(list).toHaveLength(2);
     expect(list[0]?.refId).toBe('ocean');
   });
+
+  it('removeByRef() removes only matching type+refId, preserves others', async () => {
+    const repo = new RecentsRepo();
+    await repo.push('story', 'a');
+    await repo.push('sound', 'a');
+    await repo.push('story', 'b');
+    await repo.removeByRef('story', 'a');
+    const list = await repo.listRecent();
+    expect(list.map((r) => `${r.type}:${r.refId}`).sort()).toEqual(['sound:a', 'story:b']);
+  });
 });

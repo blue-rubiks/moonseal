@@ -41,6 +41,16 @@ export class FavoritesRepo {
     const all = await this.listByType(type);
     return all.some((f) => f.refId === refId);
   }
+
+  async removeByRef(type: FavoriteType, refId: string): Promise<void> {
+    const db = await getDB();
+    const all = await db.getAll('favorites');
+    for (const f of all) {
+      if (f.type === type && f.refId === refId) {
+        await db.delete('favorites', f.id);
+      }
+    }
+  }
 }
 
 export const favoritesRepo = new FavoritesRepo();

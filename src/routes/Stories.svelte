@@ -1,6 +1,8 @@
 <script lang="ts">
   import { loadBuiltinStories } from '../lib/story/builtinStories';
   import { storyRepo, type CustomStoryRecord } from '../lib/storage/StoryRepo';
+  import { recentsRepo } from '../lib/storage/RecentsRepo';
+  import { favoritesRepo } from '../lib/storage/FavoritesRepo';
   import { uiStore } from '../lib/stores/uiStore.svelte';
   import { fmtMin } from '../lib/util/format';
   import type { StoryDef } from '../lib/story/types';
@@ -32,6 +34,8 @@
     e.stopPropagation();
     if (!confirm('確定刪除這篇夜讀？')) return;
     await storyRepo.delete(id);
+    await recentsRepo.removeByRef('story', id);
+    await favoritesRepo.removeByRef('story', id);
     await refresh();
   }
 </script>
