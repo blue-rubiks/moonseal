@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { storyStore } from '../lib/stores/storyStore.svelte';
+  import { audioStore } from '../lib/stores/audioStore.svelte';
   import { uiStore } from '../lib/stores/uiStore.svelte';
   import { fmtMin } from '../lib/util/format';
   import Glyph from '../components/Glyph.svelte';
@@ -12,17 +12,17 @@
   let { story, onClose }: Props = $props();
 
   $effect(() => {
-    void storyStore.start(story);
-    return () => storyStore.stop();
+    void audioStore.startStory(story);
+    return () => { void audioStore.stopStory(); };
   });
 
   function stopAndClose() {
-    storyStore.stop();
+    void audioStore.stopStory();
     onClose();
   }
 
-  let seg = $derived(storyStore.currentSegment);
-  let idx = $derived(storyStore.currentIndex);
+  let seg = $derived(audioStore.currentSegment);
+  let idx = $derived(audioStore.currentIndex);
   let total = $derived(story.segments.length);
   let line = $derived(seg?.poeticText ?? '');
 </script>

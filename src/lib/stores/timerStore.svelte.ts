@@ -1,6 +1,5 @@
 import { audioEngine } from '../audio/AudioEngine';
 import { audioStore } from './audioStore.svelte';
-import { storyStore } from './storyStore.svelte';
 import { SleepTimer } from '../timer/SleepTimer';
 import { settingsRepo } from '../storage/SettingsRepo';
 
@@ -16,7 +15,6 @@ class TimerStore {
     this.timer = new SleepTimer({
       fadeOut: (sec) => audioEngine.masterFadeOut(sec),
       stopAll: () => {
-        storyStore.stop();
         void audioStore.stopAll(0);
       }
     });

@@ -17,6 +17,7 @@ function rampVolume(source: Tone.Player | Tone.Noise, linearGain: number, sec: n
 export class AudioEngine {
   private initialized = false;
   private readonly tracks = new Map<string, ActiveTrack>();
+  private previewTrack: ActiveTrack | null = null;
 
   async initialize(): Promise<void> {
     if (this.initialized) return;
@@ -106,6 +107,30 @@ export class AudioEngine {
 
   activeTrackIds(): string[] {
     return [...this.tracks.keys()];
+  }
+
+  async previewOnce(soundId: string, durationSec: number, volume: number): Promise<void> {
+    await this.stopPreview(0.1);
+    const def = getSoundById(soundId);
+    if (!def) throw new Error(`unknown sound: ${soundId}`);
+    const track = await this.createTrack(def);
+    this.previewTrack = track;
+    track.source.volume.value = MIN_DB;
+    track.source.start();
+    rampVolume(track.source, volume, 0.3);
+    setTimeout(() => { void this.stopPreview(1); }, durationSec * 1000);
+  }
+
+  async stopPreview(fadeOutSec = 0.3): Promise<void> {
+    const t = this.previewTrack;
+    if (!t) return;
+    this.previewTrack = null;
+    if (fadeOutSec > 0) {
+      rampVolume(t.source, 0, fadeOutSec);
+      await new Promise((r) => setTimeout(r, fadeOutSec * 1000));
+    }
+    t.source.stop();
+    t.source.dispose();
   }
 
   private async createTrack(def: SoundDef): Promise<ActiveTrack> {

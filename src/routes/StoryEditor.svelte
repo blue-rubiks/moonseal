@@ -1,6 +1,6 @@
 <script lang="ts">
   import { BUILTIN_SOUNDS } from '../lib/audio/builtinSounds';
-  import { audioEngine } from '../lib/audio/AudioEngine';
+  import { audioStore } from '../lib/stores/audioStore.svelte';
   import { storyRepo, type CustomStoryRecord } from '../lib/storage/StoryRepo';
   import { toastStore } from '../lib/stores/toastStore.svelte';
   import { uiStore } from '../lib/stores/uiStore.svelte';
@@ -44,9 +44,7 @@
   }
 
   async function preview(soundId: string) {
-    await audioEngine.initialize();
-    await audioEngine.playTrack(soundId, 0.7);
-    setTimeout(() => { void audioEngine.stopTrack(soundId, 1); }, 5000);
+    await audioStore.preview(soundId, 5, 0.7);
   }
 
   async function save() {

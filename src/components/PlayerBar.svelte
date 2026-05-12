@@ -1,23 +1,22 @@
 <script lang="ts">
   import { audioStore } from '../lib/stores/audioStore.svelte';
-  import { storyStore } from '../lib/stores/storyStore.svelte';
   import { timerStore } from '../lib/stores/timerStore.svelte';
   import { uiStore } from '../lib/stores/uiStore.svelte';
   import { getSoundById } from '../lib/audio/builtinSounds';
   import { fmtMMSS } from '../lib/util/format';
   import Glyph from './Glyph.svelte';
 
-  let visible = $derived(audioStore.isPlaying || storyStore.isPlaying);
+  let visible = $derived(audioStore.isPlaying);
 
   let label = $derived.by(() => {
-    if (storyStore.current) return storyStore.current.nameKey;
+    if (audioStore.currentStory) return audioStore.currentStory.nameKey;
     const ids = Object.keys(audioStore.tracks);
     if (ids.length === 0) return '尚未播放';
     return ids.map((id) => getSoundById(id)?.nameKey ?? id).join(' · ');
   });
 
   let sub = $derived.by(() => {
-    if (storyStore.current) return `第 ${storyStore.currentIndex + 1} 段 · 夜讀配樂`;
+    if (audioStore.currentStory) return `第 ${audioStore.currentIndex + 1} 段 · 夜讀配樂`;
     const n = Object.keys(audioStore.tracks).length;
     if (n === 0) return '從首頁挑一個聲音開始';
     return `${n} 軌混音`;
@@ -38,7 +37,6 @@
   let progressPct = $derived(`${(timerProgress * 100).toFixed(2)}%`);
 
   async function stopAll() {
-    storyStore.stop();
     await audioStore.stopAll(0.8);
     elapsed = 0;
   }

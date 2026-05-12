@@ -52,7 +52,14 @@
   async function deleteMix(e: MouseEvent, id: string) {
     e.stopPropagation();
     if (!confirm('刪除這個混音？')) return;
+    const m = mixes.find((x) => x.id === id);
     await mixRepo.delete(id);
+    if (m && audioStore.mode === 'mix') {
+      const a = new Set(m.tracks.map((t) => t.soundId));
+      const b = new Set(Object.keys(audioStore.tracks));
+      const same = a.size === b.size && [...a].every((id) => b.has(id));
+      if (same) await audioStore.stopAll(0.3);
+    }
     await refresh();
   }
 

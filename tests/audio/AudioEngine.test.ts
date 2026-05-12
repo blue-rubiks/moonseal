@@ -165,4 +165,44 @@ describe('AudioEngine', () => {
     expect(playerInstances[0]?.volume.value).toBe(MIN_DB);
     expect(playerInstances[0]?.volume.rampTo).toHaveBeenLastCalledWith(dbOf(0.7), 1);
   });
+
+  it('previewOnce creates a separate preview track that is not in main tracks list', async () => {
+    await engine.initialize();
+    await engine.playTrack('ocean', 0.5);
+    await engine.previewOnce('rain', 5, 0.7);
+    expect(playerInstances).toHaveLength(2);
+    expect(engine.activeTrackIds()).toEqual(['ocean']);
+  });
+
+  it('previewOnce does not affect main tracks when stopAll is called', async () => {
+    await engine.initialize();
+    await engine.previewOnce('ocean', 5, 0.7);
+    await engine.stopAll(0);
+    expect(playerInstances[0]?.stop).not.toHaveBeenCalled();
+  });
+
+  it('previewOnce replaces existing preview (only one preview at a time)', async () => {
+    await engine.initialize();
+    await engine.previewOnce('ocean', 5, 0.7);
+    await engine.previewOnce('rain', 5, 0.7);
+    expect(playerInstances[0]?.stop).toHaveBeenCalled();
+    expect(playerInstances[0]?.dispose).toHaveBeenCalled();
+  });
+
+  it('stopPreview disposes the preview track without touching main tracks', async () => {
+    await engine.initialize();
+    await engine.playTrack('ocean', 0.5);
+    await engine.previewOnce('rain', 5, 0.7);
+    await engine.stopPreview(0);
+    expect(playerInstances[0]?.stop).not.toHaveBeenCalled();
+    expect(playerInstances[1]?.stop).toHaveBeenCalled();
+    expect(playerInstances[1]?.dispose).toHaveBeenCalled();
+  });
+
+  it('crossfadeTo does not affect preview track', async () => {
+    await engine.initialize();
+    await engine.previewOnce('ocean', 5, 0.7);
+    await engine.crossfadeTo('rain', 0.5, 1);
+    expect(playerInstances[0]?.stop).not.toHaveBeenCalled();
+  });
 });
